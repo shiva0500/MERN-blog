@@ -4,12 +4,10 @@ import Home from "./pages/Home";
 import Signin from "./pages/Signin";
 import User from "./pages/User";
 import Create from "./pages/Create";
-import { UserContextProvider } from "./UserContext";
 
 const App = () => {
   return (
     <>
-    <UserContextProvider>
     <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -20,7 +18,6 @@ const App = () => {
 
         </Routes>
       </BrowserRouter>
-    </UserContextProvider>
 
     </>
   );

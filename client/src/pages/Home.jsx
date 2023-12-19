@@ -4,7 +4,7 @@ const Home = () => {
   return (
     <>
       <Navbar/>
-      <h1>homeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee</h1>
+      <h1 className=' text-4xl' >home</h1>
     </>
   )
 }

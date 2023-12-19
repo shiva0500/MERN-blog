@@ -4,86 +4,69 @@ const cors = require('cors');
 const port = 3001;
 const User = require('./User');
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
 
 
-const salt = bcrypt.genSaltSync(10);
-const secret = 'dgnkjfsbgkjrbgflkfjgbkfjvkfjbg';
 
-app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true,
-}));
+
+app.use(cors());
 app.use(express.json());
-app.use(cookieParser());
 
-
-mongoose.connect('mongodb+srv://doddishiva055:879n3DvngB5Je26X@cluster0.hcqa1vq.mongodb.net/?retryWrites=true&w=majority');
+mongoose.connect('mongodb+srv://doddishiva055:WfZXv4SixdECpDeE@cluster0.dircrdk.mongodb.net/?retryWrites=true&w=majority');
 
 
 app.post('/signin', async (req, res) => {
     const { username, email, password } = req.body;
+    if (!username || !email || !password) {
+        res.status(400).send("please enter details");
+        return;
+    }
     try {
-        const UserDoc = await User.create({
-            username,
-            email,
-            password: bcrypt.hashSync(password, salt)
-        });
-        res.json(UserDoc);
-
+        const existingUser = await User.findOne({email});
+        if (existingUser) {
+            res.status(409).send('User already exists');
+            return;
+        }
+        const NewUser = new User({ username, email, password});
+        await NewUser.save();
+        res.send("user created successfully");
     } catch (error) {
-        res.status(400).json(error);
-        console.error(error);
+        console.error('Error creating user:', error);
+        res.status(500).send('Error creating user');
     }
 
 });
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
+    if (!email || !password) {
+        res.status(404).send('Please enter valid email or password');
+        return;
+    }
     try {
-        const userDoc = await User.findOne({ email });
-
-        if (!userDoc) {
-            return res.status(400).json('Invalid details');
+        const UserDoc = await User.findOne({email});
+        if (!UserDoc) {
+            res.send("email not found");
+            return;
+        } 
+        if (UserDoc.password !== password) {
+            res.send("password is incorrect");
+            return;
         }
 
-        const passok = bcrypt.compareSync(password, userDoc.password);
-        if (passok) {
-            jwt.sign({ email, id: userDoc._id }, secret, {}, (err, token) => {
-                if (err) throw err;
-                res.cookie('token', token).json({
-                    id: userDoc._id,
-                    email,
-                });
-            });
-        } else {
-            res.status(400).json('Invalid details');
-        }
+        res.send(UserDoc);
     } catch (error) {
-        console.error(error);
-        res.status(500).json('Internal Server Error');
+        console.error('Error retrieving user:', err);
+        res.status(500).send('Server error');
     }
 });
 
 app.get('/profile', (req, res) => {
-    const { token } = req.cookies;
-    if (!token) {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
+    res.send("hlo")
 
-    jwt.verify(token, secret, {}, (err, info) => {
-        if (err) {
-            return res.status(401).json({ error: 'Unauthorized' });
-        }
-
-        res.json(info);
-    });
 });
 
 app.post('/logout', (req, res) => {
-    res.clearCookie('token').json('logged out');
+    res.send("hlo")
 });
 
 

@@ -1,30 +1,48 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [user, setUser] = useState({ email: "", password: "" });
+  const [creating, setCreating] = useState(false);
+
+  const handleChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      let response = await axios.post(
-        "http://localhost:3001/login",
-        { email, password },
-        { withCredentials: true }
-      );
+    setCreating(true);
+    const response = await axios.post("http://localhost:3001/login", user);
+    if (response.data.email === user.email) {
+      localStorage.setItem("user_id", response.data._id);
+      localStorage.setItem("token", response.data._id);
+      navigate("/");
+      window.location.reload();
+      setCreating(false);
 
-      if (response.status === 200) {
-        alert("login Successful");
-        navigate("/");
-      } else {
-        alert("login failed");
-      }
-    } catch (error) {
-      console.error(error);
+    } else if (response.data == "incorrect password") {
+      console.log(response.data, "incorrect password");
+    } else if (response.data == "Email not found") {
+      console.log(response.data, "email not found");
+    } else {
+      console.log(response.data, "invalid details");
+    }
+    if (response.data == "Login successful") {
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", "token");
+      navigate("/");
+      window.location.reload();
+      setCreating(false);
+
+    } else if (response.data == "Incorrect password") {
+      console.log(response.data, "incorrect password");
+    } else if (response.data == "User not found") {
+      console.log(response.data, "User not found");
+    } else {
+      console.log(response.data);
     }
   };
 
@@ -38,8 +56,10 @@ const Login = () => {
             type="email"
             placeholder="Email"
             className="input input-bordered w-full max-w-xs"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            required
+            name="email"
+            autoComplete="email"
+            onChange={handleChange}
           />
           <br />
           <label htmlFor="Password">Password:</label>
@@ -47,12 +67,29 @@ const Login = () => {
             type="password"
             placeholder="Password"
             className="input input-bordered w-full max-w-xs"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            required
+            name="password"
+            autoComplete="password"
+            onChange={handleChange}
           />
           <br />
-          <button className="btn">Login</button>
+          <button className="btn">
+            Login
+            {creating && (
+              <span className="mt-1 ml-3  loading loading-spinner loading-xs"></span>
+            )}
+          </button>
         </form>
+        <p className="mt-10 text-center text-sm text-gray-500">
+          New user?{" "}
+          <Link to="/signin">
+            <a
+              href="#"
+              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+              Sign Up
+            </a>
+          </Link>
+        </p>
       </div>
     </>
   );

@@ -1,41 +1,23 @@
-import axios from "axios";
-import {  useContext, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { UserContext } from "../UserContext";
 
 const Navbar = () => {
-  const{setEmailnfo} = useContext(UserContext);
+  const [isLogin, setIsLogin] = useState(true);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/profile", {
-          withCredentials: true,
-        });
-        const userInfo = response.data;
-        setEmailnfo(userInfo.email);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchProfile();
-  }, []);
+    if (localStorage.getItem("token")) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, [isLogin]);
 
   const logout = async () => {
-    try {
-      await axios.post(
-        "http://localhost:3001/logout",
-        {},
-        { withCredentials: true }
-      );
-      setEmailnfo(null);
-    } catch (error) {
-      console.error(error);
-    }
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setIsLogin(false);
+    window.location.reload();
   };
-
-  const email = userInfo?.email;
 
   return (
     <div>
@@ -47,21 +29,7 @@ const Navbar = () => {
         </div>
         <div>
           <ul className="flex items-center list-none ml-4">
-            {!email && (
-              <>
-                <li className="mr-4">
-                  <Link to="/login" className="text-primary">
-                    Login
-                  </Link>
-                </li>
-                <li className="mr-4">
-                  <Link to="/signin" className="text-primary">
-                    Signin
-                  </Link>
-                </li>
-              </>
-            )}
-            {email && (
+            {isLogin ? (
               <div className="flex items-center justify-center">
                 <Link to="/user" className="text-primary pr-4">
                   User
@@ -72,6 +40,19 @@ const Navbar = () => {
                 <button className="btn" onClick={logout}>
                   Logout
                 </button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center">
+                <li className="mr-4">
+                  <Link to="/login" className="text-primary">
+                    Login
+                  </Link>
+                </li>
+                <li className="mr-4">
+                  <Link to="/signin" className="text-primary">
+                    Signin
+                  </Link>
+                </li>
               </div>
             )}
           </ul>
