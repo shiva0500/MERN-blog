@@ -32,7 +32,7 @@ const Navbar = () => {
             {isLogin ? (
               <div className="flex items-center justify-center">
                 <Link to="/user" className="text-primary pr-4">
-                  User
+                 user 
                 </Link>{" "}
                 <Link to="/create" className="text-primary pr-6">
                   Create

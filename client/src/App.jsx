@@ -3,7 +3,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Signin from "./pages/Signin";
 import User from "./pages/User";
-import Create from "./pages/Create";
+import CreatePost from "./pages/CreatePost";
 
 const App = () => {
   return (
@@ -14,7 +14,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/user" element={<User />} />
-          <Route path="/create" element={<Create />} />
+          <Route path="/create" element={<CreatePost />} />
 
         </Routes>
       </BrowserRouter>

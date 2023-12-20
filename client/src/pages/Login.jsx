@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState({ email: "", password: "" });
+  const [user, setUser] = useState({ email: '', password: '' });
   const [creating, setCreating] = useState(false);
 
   const handleChange = (e) => {
@@ -31,7 +31,7 @@ const Login = () => {
       console.log(response.data, "invalid details");
     }
     if (response.data == "Login successful") {
-      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("user", JSON.stringify(user.email));
       localStorage.setItem("token", "token");
       navigate("/");
       window.location.reload();
