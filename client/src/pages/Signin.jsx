@@ -18,7 +18,8 @@ const Signin = () => {
     try {
       const response = await axios.post("http://localhost:3001/signin" , user);
       console.log("user created:", response.data);
-      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("useremail", user.email);
+      localStorage.setItem("username", user.username);
       localStorage.setItem("token", "token");
       navigate("/");
       window.location.reload();

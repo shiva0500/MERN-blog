@@ -22,9 +22,11 @@ const CreatePost = () => {
 
 
 
-  const useremail = localStorage.getItem('user');
+  const useremail = localStorage.getItem('useremail');
+  const username = localStorage.getItem('username');
+
   
-  const {email, password,username} = useremail;
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,16 +36,19 @@ const CreatePost = () => {
     formData.append("description", newPost.description);
     formData.append("summary", newPost.summary);
     formData.append("file", newPost.file);
+    formData.append( "email",useremail );
+    formData.append( "username",username );
 
-  console.log(useremail.email);    
-    // formData.append( "email", );
 
     setCreating(true);
 
     try {
       const response = await axios.post("http://localhost:3001/post", formData);
+      console.log(response);
+
       console.log("Post created successfully", response.ok);
       alert("Post created successfully"); 
+      window.location.reload();
     } catch (error) {
       alert("Failed to create post");
       console.error("Failed to create post");

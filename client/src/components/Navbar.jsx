@@ -15,6 +15,8 @@ const Navbar = () => {
   const logout = async () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("useremail");
+
     setIsLogin(false);
     window.location.reload();
   };
@@ -31,8 +33,11 @@ const Navbar = () => {
           <ul className="flex items-center list-none ml-4">
             {isLogin ? (
               <div className="flex items-center justify-center">
+                <Link to="/" className="text-primary pr-4">
+                  Home
+                </Link>
                 <Link to="/user" className="text-primary pr-4">
-                 user 
+                  user
                 </Link>{" "}
                 <Link to="/create" className="text-primary pr-6">
                   Create
@@ -44,10 +49,15 @@ const Navbar = () => {
             ) : (
               <div className="flex items-center justify-center">
                 <li className="mr-4">
+                  <Link to="/" className="text-primary pr-4">
+                    Home
+                  </Link>
+                </li>
+                {/* <li className="mr-4">
                   <Link to="/login" className="text-primary">
                     Login
                   </Link>
-                </li>
+                </li> */}
                 <li className="mr-4">
                   <Link to="/signin" className="text-primary">
                     Signin

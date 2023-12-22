@@ -64,6 +64,27 @@ app.post('/login', async (req, res) => {
   }
 });
 
+app.get('/getuser', async (req, res) => {
+  const useremail = req.body;
+  try {
+   
+    const UserDoc = await User.findOne({ email });
+    console.log(UserDoc);
+    if (UserDoc) {
+      res.status(200).json({
+        name: UserDoc.username,
+        email: UserDoc.email,
+        posts: UserDoc.posts, 
+      });
+    } else {
+      res.status(404).json({ error: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 const storage = multer.diskStorage({
   destination: './uploads',
   filename: function (req, file, cb) {
@@ -80,43 +101,42 @@ app.use('/uploads', express.static('uploads'));
 
 app.post('/post', upload.single('file'), async (req, res) => {
   try {
-    const { title, description, summary } = req.body;
+    const { title, description, summary, email ,username } = req.body;
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
-    // Create a new post document using the PostModel
     const newPost = new Post({
       title,
       description,
       summary,
       imageUrl,
+      username,
+      createdAt: new Date(),
     });
 
     await newPost.save();
-    const postdata = newPost._id;
+    console.log(newPost);
 
-    const {email} = req.body;
-    const UserDoc = await User.findOne({ email });
-    console.log(UserDoc);
-    console.log(email);
+    const userDoc = await User.findOne({ email });
 
-
-    if (UserDoc.email === email) {
-      console.log(postdata)
-      // User.posts.push(postdata);
-      await UserDoc.save();
+    if (userDoc) {
+      userDoc.posts.push(newPost._id);
+      await userDoc.save();
       res.send('Post created successfully');
     } else {
-      res.send('User not found' );
+      res.send('User not found');
     }
   } catch (error) {
     console.error(error);
-    res.send( 'Internal Server Error' );
+    res.status(500).send('Internal Server Error');
   }
 });
 
+
 app.get('/getposts', async (req, res) => {
   try {
-    const posts = await Post.find();
+    const posts = await Post.find()
+    .sort({createdAt: 'desc'})
+    .limit(20);
 
     res.status(200).json(posts);
   } catch (error) {

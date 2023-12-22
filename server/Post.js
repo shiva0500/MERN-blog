@@ -14,9 +14,17 @@ const PostSchema = new Schema({
         type: String,
         required: true,
       },
+      username: {
+        type: String,
+        required: true,
+      },
       imageUrl: {
         type: String,
         default: null,
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
       },
 });
 

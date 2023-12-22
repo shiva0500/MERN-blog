@@ -18,6 +18,7 @@ const Login = () => {
     const response = await axios.post("http://localhost:3001/login", user);
     if (response.data.email === user.email) {
       localStorage.setItem("user_id", response.data._id);
+      localStorage.setItem("useremail", response.data.email);
       localStorage.setItem("token", response.data._id);
       navigate("/");
       window.location.reload();
