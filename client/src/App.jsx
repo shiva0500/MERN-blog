@@ -5,11 +5,12 @@ import Signin from "./pages/Signin";
 import User from "./pages/User";
 import CreatePost from "./pages/CreatePost";
 import Blogs from "./pages/Blogs";
+import Updatepost from "./pages/Updatepost";
 
 const App = () => {
   return (
     <>
-    <BrowserRouter>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -17,9 +18,9 @@ const App = () => {
           <Route path="/user" element={<User />} />
           <Route path="/create" element={<CreatePost />} />
           <Route path="/blog" element={<Blogs />} />
+          <Route path="/update/:postId" element={<Updatepost />} />
         </Routes>
       </BrowserRouter>
-
     </>
   );
 };

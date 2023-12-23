@@ -7,7 +7,7 @@ const User = require('./User');
 const Post = require('./Post');
 const mongoose = require('mongoose');
 const multer = require('multer');
-
+const { ObjectId } = require('mongoose').mongo;
 
 
 app.use(cors());
@@ -48,6 +48,7 @@ app.post('/login', async (req, res) => {
   }
   try {
     const UserDoc = await User.findOne({ email });
+
     if (!UserDoc) {
       res.send("email not found");
       return;
@@ -65,16 +66,15 @@ app.post('/login', async (req, res) => {
 });
 
 app.get('/getuser', async (req, res) => {
-  const useremail = req.body;
+
   try {
-   
-    const UserDoc = await User.findOne({ email });
-    console.log(UserDoc);
+    const { email } = req.query;
+    const UserDoc = await User.findOne({ email }).populate('posts');
     if (UserDoc) {
       res.status(200).json({
         name: UserDoc.username,
         email: UserDoc.email,
-        posts: UserDoc.posts, 
+        posts: UserDoc.posts,
       });
     } else {
       res.status(404).json({ error: 'User not found' });
@@ -84,6 +84,8 @@ app.get('/getuser', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
 
 const storage = multer.diskStorage({
   destination: './uploads',
@@ -96,12 +98,11 @@ const upload = multer({ storage: storage });
 
 app.use('/uploads', express.static('uploads'));
 
-// Express middleware to parse JSON and urlencoded request bodies
 
 
 app.post('/post', upload.single('file'), async (req, res) => {
   try {
-    const { title, description, summary, email ,username } = req.body;
+    const { title, description, summary, email, username } = req.body;
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
     const newPost = new Post({
@@ -114,7 +115,6 @@ app.post('/post', upload.single('file'), async (req, res) => {
     });
 
     await newPost.save();
-    console.log(newPost);
 
     const userDoc = await User.findOne({ email });
 
@@ -135,16 +135,80 @@ app.post('/post', upload.single('file'), async (req, res) => {
 app.get('/getposts', async (req, res) => {
   try {
     const posts = await Post.find()
-    .sort({createdAt: 'desc'})
-    .limit(20);
+      .sort({ createdAt: 'desc' })
+      .limit(20);
 
     res.status(200).json(posts);
   } catch (error) {
     console.error(error);
-    res.send('Internal Server Error' );
+    res.send('Internal Server Error');
   }
 });
 
+app.delete('/deletepost/:postId', async (req, res) => {
+  try {
+    const { postId } = req.params;
+    await Post.findByIdAndDelete({ _id: postId });
+    await User.updateOne(
+      { posts: postId }, // Criteria to find the user
+      { $pull: { posts: postId } } // Remove the specified post from the array
+    );
+    
+    res.status(200).send('Deleted');
+  } catch (error) {
+    console.error('errorrrrr', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/getpost/:postId', async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const post = await Post.findById({ _id: postId });
+    res.status(200).json(post);
+  } catch (error) {
+    console.error('errorrrrr', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+
+const updatestorage = multer.diskStorage({
+  destination: './updateduploads',
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  },
+});
+
+const updatedfile = multer({ storage: updatestorage });
+
+app.use('/updateduploads', express.static('updateduploads'));
+
+
+app.post('/update/:postId', updatedfile.single('file'), async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { title, description, summary } = req.body;
+    const imageUrl = req.file ? `/updateduploads/${req.file.filename}` : null;
+
+    const updatedPost = {
+      title,
+      description,
+      summary,
+      imageUrl,
+      createdAt: new Date(),
+    };
+
+    // Find the existing post by ID and update its fields
+    await Post.findByIdAndUpdate(postId, updatedPost);
+
+    res.status(200).send('Post updated successfully');
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 
 app.listen(port, () => {

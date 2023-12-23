@@ -15,8 +15,13 @@ const UserSchema = new Schema({
         type: String,
         required: true,
     },
+    imageUrl: {
+        type: String,
+        default: null,
+    },
     posts: [
         {
+            
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Post',
         }

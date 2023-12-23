@@ -11,7 +11,7 @@ const Home = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/getposts");
+        const response = await axios.get("https://mern-blogserver.onrender.com/getposts");
         if (response.status === 200) {
           setPosts(response.data);
         } else {
@@ -43,7 +43,7 @@ const Home = () => {
               onClick={() => handleNavigate(post)}>
               {post.imageUrl && (
                 <img
-                  src={`http://localhost:3001${post.imageUrl}`}
+                  src={`https://mern-blogserver.onrender.com${post.imageUrl}`}
                   alt="Post"
                   className="w-full h-32 object-cover"
                 />

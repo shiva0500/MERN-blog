@@ -15,8 +15,9 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setCreating(true);
-    const response = await axios.post("http://localhost:3001/login", user);
+    const response = await axios.post("https://mern-blogserver.onrender.com/login", user);
     if (response.data.email === user.email) {
+      localStorage.setItem("username", response.data.username);
       localStorage.setItem("user_id", response.data._id);
       localStorage.setItem("useremail", response.data.email);
       localStorage.setItem("token", response.data._id);

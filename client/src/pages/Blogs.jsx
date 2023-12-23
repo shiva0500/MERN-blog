@@ -12,7 +12,7 @@ const Blogs = () => {
         {post && (
           <div className="bg-white rounded-lg  h-auto shadow-md ">
             <img
-              src={`http://localhost:3001${post.imageUrl}`}
+              src={`https://mern-blogserver.onrender.com${post.imageUrl}`}
               alt="Post"
               className="w-auto h- object-cover"
             />
