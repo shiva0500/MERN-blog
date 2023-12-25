@@ -14,14 +14,16 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-quill": "^2.0.0",
-    "react-router-dom": "^6.21.0"
+    "react-router-dom": "^6.21.0",
+    "sweetalert2": "^11.10.1",
+    "sweetalert2-react-content": "^5.0.7"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
     "@vitejs/plugin-react": "^4.2.0",
     "autoprefixer": "^10.4.16",
-    "daisyui": "^4.4.14",
+    "daisyui": "^4.4.24",
     "eslint": "^8.53.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",

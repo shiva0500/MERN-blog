@@ -2,6 +2,7 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -12,18 +13,32 @@ const Login = () => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
+
+  const alert1 = () => {
+    Swal.fire({
+      icon: "success",
+      title: "Login Successfully",
+      showConfirmButton: false,
+      timer: 1500
+    });
+  }
+
+
+
+
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setCreating(true);
-    const response = await axios.post("https://mern-blogserver.onrender.com/login", user);
+    const response = await axios.post("http://localhost:3001/login", user);
     if (response.data.email === user.email) {
       localStorage.setItem("username", response.data.username);
       localStorage.setItem("user_id", response.data._id);
       localStorage.setItem("useremail", response.data.email);
       localStorage.setItem("token", response.data._id);
       navigate("/");
-      window.location.reload();
       setCreating(false);
+      alert1();
 
     } else if (response.data == "incorrect password") {
       console.log(response.data, "incorrect password");
@@ -36,9 +51,7 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(user.email));
       localStorage.setItem("token", "token");
       navigate("/");
-      window.location.reload();
       setCreating(false);
-
     } else if (response.data == "Incorrect password") {
       console.log(response.data, "incorrect password");
     } else if (response.data == "User not found") {
@@ -75,7 +88,7 @@ const Login = () => {
             onChange={handleChange}
           />
           <br />
-          <button className="btn">
+          <button className="btn flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
             Login
             {creating && (
               <span className="mt-1 ml-3  loading loading-spinner loading-xs"></span>

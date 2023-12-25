@@ -39,7 +39,7 @@ const Updatepost = () => {
 
     try {
       const response = await axios.post(
-        `https://mern-blogserver.onrender.com/update/${postId}`,
+        `http://localhost:3001/update/${postId}`,
         formData
       );
       console.log(response.data);
@@ -59,7 +59,7 @@ const Updatepost = () => {
     const fetchPostData = async () => {
       try {
         const response = await axios.get(
-          `https://mern-blogserver.onrender.com/getpost/${postId}`
+          `http://localhost:3001/getpost/${postId}`
         );
         console.log("getiing post data", response.data);
         setPostData(response.data);

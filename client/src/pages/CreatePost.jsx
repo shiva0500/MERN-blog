@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import Swal from "sweetalert2";
 
 const CreatePost = () => {
   const [creating, setCreating] = useState(false);
@@ -26,7 +27,14 @@ const CreatePost = () => {
   const username = localStorage.getItem('username');
 
   
-  
+  const alert1 = () => {
+    Swal.fire({
+      icon: "success",
+      title: "Post created successfully",
+      showConfirmButton: false,
+      timer: 1500
+    });
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,12 +51,12 @@ const CreatePost = () => {
     setCreating(true);
 
     try {
-      const response = await axios.post("https://mern-blogserver.onrender.com/post", formData);
+      const response = await axios.post("http://localhost:3001/post", formData);
       console.log(response);
 
       console.log("Post created successfully", response.ok);
-      alert("Post created successfully"); 
-      window.location.reload();
+      alert1();
+      setNewPost(null);
     } catch (error) {
       alert("Failed to create post");
       console.error("Failed to create post");

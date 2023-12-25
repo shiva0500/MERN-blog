@@ -10,7 +10,7 @@ const User = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("https://mern-blogserver.onrender.com/getuser", {
+        const response = await axios.get("http://localhost:3001/getuser", {
           params: { email },
         });
 
@@ -30,7 +30,7 @@ const User = () => {
   const handleDelete = async (postId) => {
     try {
       const response = await axios.delete(
-        `https://mern-blogserver.onrender.com/deletepost/${postId}`
+        `http://localhost:3001/deletepost/${postId}`
       );
 
       if (response.status === 200) {
@@ -57,7 +57,7 @@ const User = () => {
           <>
             {userData.profilePic ? (
               <img
-                src={`https://mern-blogserver.onrender.com${userData.profilePic}`}
+                src={`http://localhost:3001${userData.profilePic}`}
                 alt="Profile"
                 className="w-32 h-32 object-cover rounded-full"
               />

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import axios from "axios";
+import Swal from 'sweetalert2'
 import { Link, useNavigate } from "react-router-dom";
 
 const Signin = () => {
@@ -12,25 +13,48 @@ const Signin = () => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
+
+  const alert1 = () => {
+    Swal.fire({
+      icon: "success",
+      title: "Signin Successfully",
+      showConfirmButton: false,
+      timer: 3500
+    });
+  }
+
+
+  const alert2 = () => {
+    Swal.fire({
+      icon: "error",
+      title: "Signin failed",
+      showConfirmButton: false,
+      timer: 3500
+    });
+  }
+
+
   const handlesignin = async (e) => {
     e.preventDefault();
     setCreating(true);
     try {
-      const response = await axios.post("https://mern-blogserver.onrender.com/signin" , user);
+      const response = await axios.post("http://localhost:3001/signin" , user);
       console.log("user created:", response.data);
       localStorage.setItem("useremail", user.email);
       localStorage.setItem("username", user.username);
       localStorage.setItem("token", "token");
       navigate("/");
-      window.location.reload();
-      alert("Signin Successful");
+      alert1();
+      // window.location.reload();
     } catch (error) {
-      console.error(error);
-      alert("Signin failed:", error.getMessage());
+      console.error("Signin failed:", error.getMessage());
+      alert2();
     } finally {
       setCreating(false);
     }
   };
+
+
 
   return (
     <>
