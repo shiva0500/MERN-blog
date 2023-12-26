@@ -1,3 +1,50 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.signinpage {
+    background-image: url("./assests/signin-bg.jpeg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    filter: blur(4px);
+    position: relative;
+  }
+  
+  .container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.195);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 500px; /* Adjust the width as needed */
+    height: 420px; /* Adjust the height as needed */
+  }
+
+ .Logincontainer{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.195);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 500px; /* Adjust the width as needed */
+    height: 310px; /* Adjust the height as needed */
+  }
+  
+  .signinform {
+    padding: 20px;
+    width: 100%; /* Make the form width 100% of the container */
+    height: 100%; /* Make the form height 100% of the container */
+  }
+  
+  
+  

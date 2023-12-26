@@ -10,7 +10,7 @@ const User = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/getuser", {
+        const response = await axios.get("https://mern-blogserver.onrender.com/getuser", {
           params: { email },
         });
 
@@ -30,7 +30,7 @@ const User = () => {
   const handleDelete = async (postId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3001/deletepost/${postId}`
+        `https://mern-blogserver.onrender.com/deletepost/${postId}`
       );
 
       if (response.status === 200) {
@@ -55,57 +55,73 @@ const User = () => {
       <div className="w-max m-auto mt-10">
         {userData ? (
           <>
-            {userData.profilePic ? (
-              <img
-                src={`http://localhost:3001${userData.profilePic}`}
-                alt="Profile"
-                className="w-32 h-32 object-cover rounded-full"
-              />
-            ) : (
-              <img
-                src={"https://cdn-icons-png.flaticon.com/512/6522/6522516.png"}
-                className="w-32 h-32 object-cover rounded-full"
-                alt="/"
-              />
-            )}
+            <div className="flex flex-col items-center mb-8">
+              {userData.profilePic ? (
+                <img
+                  src={`https://mern-blogserver.onrender.com${userData.profilePic}`}
+                  alt="Profile"
+                  className="w-32 h-32 object-cover rounded-full"
+                />
+              ) : (
+                <img
+                  src={
+                    "https://cdn-icons-png.flaticon.com/512/6522/6522516.png"
+                  }
+                  className=" h-40 object-cover rounded-full"
+                  alt="/"
+                />
+              )}
 
-            <h1>{userData.name}</h1>
-            <p>Email: {userData.email}</p>
+              <h1 className="mt-2 text-white mb-2  text-3xl uppercase font-bold">
+                {userData.name}
+              </h1>
+              <p className="text-gray-300 text-xl">Email: {userData.email}</p>
+            </div>
 
-            <h2>Posts created by {userData.name}:</h2>
-            {userData.posts.length > 0 ? (
-              <table className="table-auto max-w-full border-separate border p-6">
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
+            <h2 className="text-2xl font-bold mb-4">
+              Posts created by {userData.name}:
+            </h2>
+            <div>
+              {userData.posts.length > 0 ? (
+                <div className="grid md:grid-cols-2 p-0 lg:grid-cols-3 gap-4 ">
                   {userData.posts.map((post) => (
-                    <tr key={post._id}>
-                      <td>{post.title}</td>
-                      <td>{post.description}</td>
-                      <td>
-                        <Link
-                          to={`/update/${post._id}`}
-                          className="btn btn-success ">
-                          Update
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(post._id)}
-                          className="btn btn-error px-2 py-1">
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
+                    <div 
+                      key={post._id}
+                      className="bg-white rounded-lg max-w-md">
+                      {post.imageUrl && (
+                        <img
+                          src={`https://mern-blogserver.onrender.com${post.imageUrl}`}
+                          alt="Post"
+                          className="w-full h-32 object-cover object-center"
+                        />
+                      )}
+                      <div className="p-4">
+                        <h3 className="text-xl font-semibold mb-2">
+                          {post.title}
+                        </h3>
+                        <p className="text-gray-600 mb-2 max-w-[400px] overflow-hidden line-clamp-4">
+                          {post.description}
+                        </p>
+                        <div className="flex items-center space-x-4">
+                          <Link
+                            to={`/update/${post._id}`}
+                            className="btn btn-success hover:bg-green-700">
+                            Update
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(post._id)}
+                            className="btn btn-error hover:bg-red-700">
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   ))}
-                </tbody>
-              </table>
-            ) : (
-              <p>No posts available.</p>
-            )}
+                </div>
+              ) : (
+                <p>No posts available.</p>
+              )}
+            </div>
           </>
         ) : (
           <p>Loading user data...</p>

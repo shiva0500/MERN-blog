@@ -51,7 +51,7 @@ const CreatePost = () => {
     setCreating(true);
 
     try {
-      const response = await axios.post("http://localhost:3001/post", formData);
+      const response = await axios.post("https://mern-blogserver.onrender.com/post", formData);
       console.log(response);
 
       console.log("Post created successfully", response.ok);

@@ -6,31 +6,29 @@ import Swal from "sweetalert2";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState({ email: '', password: '' });
+  const [user, setUser] = useState({ email: "", password: "" });
   const [creating, setCreating] = useState(false);
 
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-
   const alert1 = () => {
     Swal.fire({
       icon: "success",
       title: "Login Successfully",
       showConfirmButton: false,
-      timer: 1500
+      timer: 1500,
     });
-  }
-
-
-
-
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setCreating(true);
-    const response = await axios.post("http://localhost:3001/login", user);
+    const response = await axios.post(
+      "https://mern-blogserver.onrender.com/login",
+      user
+    );
     if (response.data.email === user.email) {
       localStorage.setItem("username", response.data.username);
       localStorage.setItem("user_id", response.data._id);
@@ -39,7 +37,6 @@ const Login = () => {
       navigate("/");
       setCreating(false);
       alert1();
-
     } else if (response.data == "incorrect password") {
       console.log(response.data, "incorrect password");
     } else if (response.data == "Email not found") {
@@ -64,43 +61,50 @@ const Login = () => {
   return (
     <>
       <Navbar />
-      <div className="loginpage w-max m-auto p-8  ">
+      <div className="signinpage  w-screen h-screen m-auto p-8"></div>
+      <div className="Logincontainer">
         <form action="" method="post" onSubmit={handleLogin}>
-          <label htmlFor="email">Email:</label>
+          <label className="text-left mb-2 text-white text-lg" htmlFor="email">
+            Email:
+          </label>
           <input
             type="email"
             placeholder="Email"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full p-5 mb-4 "
             required
             name="email"
             autoComplete="email"
             onChange={handleChange}
           />
           <br />
-          <label htmlFor="Password">Password:</label>
+          <label
+            className="text-left mb-2 text-white text-lg"
+            htmlFor="Password">
+            Password:
+          </label>
           <input
             type="password"
             placeholder="Password"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full p-5 mb-4 "
             required
             name="password"
             autoComplete="password"
             onChange={handleChange}
           />
           <br />
-          <button className="btn flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+          <button className="btn btn-defualt mt-4  border-none flex w-full justify-center rounded-md  px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
             Login
             {creating && (
               <span className="mt-1 ml-3  loading loading-spinner loading-xs"></span>
             )}
           </button>
         </form>
-        <p className="mt-10 text-center text-sm text-gray-500">
+        <p className="mt-10 text-center text-base text-gray-300">
           New user?{" "}
           <Link to="/signin">
             <a
               href="#"
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+              className="font-semibold text-lg leading-6 text-indigo-600 hover:text-indigo-500">
               Sign Up
             </a>
           </Link>

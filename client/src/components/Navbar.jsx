@@ -55,14 +55,14 @@ const Navbar = () => {
           LAZYBLOGS
           </Link>
         </div>
-        <div>
-          <ul className="flex items-center justify-between list-none ml-4">
+        <div >
+          <ul className=" list-none ">
             {isLogin ? (
-              <div className="flex items-center justify-center">
-                <Link to="/" className="text-white pr-4">
+              <div className=" flex items-center justify-center gap-6" >
+                <Link to="/" className="text-white text-lg pr-4">
                   Home
                 </Link>
-                <Link to="/user" className="text-white pr-4">
+                <Link to="/user" className="text-white  pr-4">
                   <i className="fa-solid fa-user fa-xl"></i>{" "}
                 </Link>{" "}
                 <Link to="/create" className="text-white pr-6">
@@ -73,14 +73,14 @@ const Navbar = () => {
                 </button>
               </div>
             ) : (
-              <div className="flex items-center justify-center">
+              <div className=" flex items-center justify-center gap-2" >
                 <li className="mr-4">
-                  <Link to="/" className="text-white pr-4">
+                  <Link to="/" className="text-white text-lg pr-4">
                     Home
                   </Link>
                 </li>
                 <li className="mr-4">
-                  <Link to="/signin" className="text-primary">
+                  <Link to="/signin" className="text-primary text-lg">
                     Signin
                   </Link>
                 </li>
