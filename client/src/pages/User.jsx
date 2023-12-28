@@ -3,16 +3,48 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
 
+
 const User = () => {
   const [userData, setUserData] = useState(null);
+  const [userImg, setUserImg] = useState({ file: null });
   const email = localStorage.getItem("useremail");
+
+  console.log(userData);
+  
+  const handleChange = (e) => {
+    setUserImg({ file: e.target.files[0] });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      formData.append("file", userImg.file);
+      formData.append("email", email);
+
+      const response = await axios.post(
+        "https://mern-blogserver.onrender.com/userimg",
+        formData
+      );
+      alert("Successfully submitted")
+      console.log(response.data);
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("https://mern-blogserver.onrender.com/getuser", {
-          params: { email },
-        });
+        const response = await axios.get(
+          "https://mern-blogserver.onrender.com/getuser",
+          {
+            params: { email },
+          }
+        );
 
         if (response.status === 200) {
           setUserData(response.data);
@@ -34,7 +66,6 @@ const User = () => {
       );
 
       if (response.status === 200) {
-        // Remove the deleted post from the state
         setUserData((prevData) => ({
           ...prevData,
           posts: prevData.posts.filter((post) => post._id !== postId),
@@ -48,6 +79,7 @@ const User = () => {
       console.error("Error:", error);
     }
   };
+
 
   return (
     <>
@@ -71,7 +103,17 @@ const User = () => {
                   alt="/"
                 />
               )}
-
+              <form encType="multipart/form-data" onSubmit={handleSubmit}>
+                <input
+                  type="file"
+                  className="file-input file-input-bordered file-input-primary w-full mb-4"
+                  name="file"
+                  onChange={handleChange}
+                />
+                <button type="submit" className="btn btn-primary">
+                  Upload Image
+                </button>
+              </form>
               <h1 className="mt-2 text-white mb-2  text-3xl uppercase font-bold">
                 {userData.name}
               </h1>
@@ -85,7 +127,7 @@ const User = () => {
               {userData.posts.length > 0 ? (
                 <div className="grid md:grid-cols-2 p-0 lg:grid-cols-3 gap-4 ">
                   {userData.posts.map((post) => (
-                    <div 
+                    <div
                       key={post._id}
                       className="bg-white rounded-lg max-w-md">
                       {post.imageUrl && (

@@ -46,10 +46,7 @@ const CreatePost = () => {
     formData.append("file", newPost.file);
     formData.append( "email",useremail );
     formData.append( "username",username );
-
-
     setCreating(true);
-
     try {
       const response = await axios.post("https://mern-blogserver.onrender.com/post", formData);
       console.log(response);

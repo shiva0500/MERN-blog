@@ -65,6 +65,46 @@ app.post('/login', async (req, res) => {
   }
 });
 
+const UserImgstorage = multer.diskStorage({
+  destination: './UserImguploads',
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  },
+});
+
+const UserImgupload = multer({ storage: UserImgstorage });
+
+app.use('/UserImguploads', express.static('UserImguploads'));
+
+app.post('/userimg', UserImgupload.single('file'), async (req, res) => {
+  try {
+    const userEmail = req.body.email;
+    
+    if (!userEmail || !req.file) {
+      console.error('Invalid request. Please provide useremail and file.');
+      return res.status(400).send('Invalid request');
+    }
+
+    const userImg = `/UserImguploads/${req.file.filename}`;
+
+    const userDoc = await User.findOne({ email: userEmail });
+
+    if (userDoc) {
+      userDoc.imageUrl = userImg;
+      await userDoc.save();
+      console.log('User document updated successfully');
+      return res.status(200).send('Image uploaded successfully');
+    } else {
+      console.error('User not found');
+      return res.status(404).send('User not found');
+    }
+  } catch (error) {
+    console.error('Error:', error.message);
+    return res.status(500).send('Internal Server Error');
+  }
+});
+
+
 app.get('/getuser', async (req, res) => {
 
   try {
@@ -74,6 +114,7 @@ app.get('/getuser', async (req, res) => {
       res.status(200).json({
         name: UserDoc.username,
         email: UserDoc.email,
+        profilePic: UserDoc.imageUrl,
         posts: UserDoc.posts,
       });
     } else {
@@ -153,7 +194,7 @@ app.delete('/deletepost/:postId', async (req, res) => {
       { posts: postId }, // Criteria to find the user
       { $pull: { posts: postId } } // Remove the specified post from the array
     );
-    
+
     res.status(200).send('Deleted');
   } catch (error) {
     console.error('errorrrrr', error);
